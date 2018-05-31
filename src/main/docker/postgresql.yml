@@ -1,0 +1,11 @@
+version: '2'
+services:
+    buscapdf-postgresql:
+        image: postgres:9.6.5
+        # volumes:
+        #     - ~/volumes/jhipster/buscapdf/postgresql/:/var/lib/postgresql/data/
+        environment:
+            - POSTGRES_USER=buscapdf
+            - POSTGRES_PASSWORD=
+        ports:
+            - 5432:5432

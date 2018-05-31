@@ -1,0 +1,14 @@
+version: '2'
+services:
+    buscapdf-app:
+        image: buscapdf
+        environment:
+            - SPRING_PROFILES_ACTIVE=prod,swagger
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://buscapdf-postgresql:5432/buscapdf
+            - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+        ports:
+            - 8080:8080
+    buscapdf-postgresql:
+        extends:
+            file: postgresql.yml
+            service: buscapdf-postgresql
