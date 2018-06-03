@@ -1,0 +1,10 @@
+entity UserExtra {
+    cpf String required maxlength(11),
+    rg Integer required,
+    functionalNumber Integer required
+}
+
+relationship OneToOne {
+	// User é uma Entidade criada pelo Framework
+    UserExtra{user} to User
+}

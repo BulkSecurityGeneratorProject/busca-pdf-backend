@@ -3,14 +3,17 @@ package br.buscapdf.service;
 import br.buscapdf.config.CacheConfiguration;
 import br.buscapdf.domain.Authority;
 import br.buscapdf.domain.User;
+import br.buscapdf.domain.UserExtra;
 import br.buscapdf.repository.AuthorityRepository;
 import br.buscapdf.config.Constants;
+import br.buscapdf.repository.UserExtraRepository;
 import br.buscapdf.repository.UserRepository;
 import br.buscapdf.security.AuthoritiesConstants;
 import br.buscapdf.security.SecurityUtils;
 import br.buscapdf.service.util.RandomUtil;
 import br.buscapdf.service.dto.UserDTO;
 
+import br.buscapdf.web.rest.vm.ManagedUserVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -37,14 +40,19 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final UserExtraRepository userExtraRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     private final AuthorityRepository authorityRepository;
 
     private final CacheManager cacheManager;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository, CacheManager cacheManager) {
+    public UserService(UserRepository userRepository, UserExtraRepository userExtraRepository,
+                       PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository,
+                       CacheManager cacheManager) {
         this.userRepository = userRepository;
+        this.userExtraRepository = userExtraRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
@@ -115,6 +123,21 @@ public class UserService {
         cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(newUser.getLogin());
         cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(newUser.getEmail());
         log.debug("Created Information for User: {}", newUser);
+        return newUser;
+    }
+
+    public User registerUser(ManagedUserVM managedUserVM, String password, String cpf, Integer rg, Integer functionalNumber) {
+        User newUser = this.registerUser(managedUserVM, password);
+
+        UserExtra newUserExtra = new UserExtra();
+        newUserExtra.setUser(newUser);
+        newUserExtra.setCpf(cpf);
+        newUserExtra.setRg(rg);
+        newUserExtra.setFunctionalNumber(functionalNumber);
+        userExtraRepository.save(newUserExtra);
+
+        log.debug("Created Information for UserExtra: {}", newUserExtra);
+
         return newUser;
     }
 
@@ -265,5 +288,4 @@ public class UserService {
     public List<String> getAuthorities() {
         return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
     }
-
 }

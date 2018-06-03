@@ -38,6 +38,7 @@ public class CacheConfiguration {
             cm.createCache(br.buscapdf.domain.User.class.getName(), jcacheConfiguration);
             cm.createCache(br.buscapdf.domain.Authority.class.getName(), jcacheConfiguration);
             cm.createCache(br.buscapdf.domain.User.class.getName() + ".authorities", jcacheConfiguration);
+            cm.createCache(br.buscapdf.domain.UserExtra.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }
