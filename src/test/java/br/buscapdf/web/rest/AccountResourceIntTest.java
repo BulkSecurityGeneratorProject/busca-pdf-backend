@@ -170,6 +170,12 @@ public class AccountResourceIntTest {
         validUser.setImageUrl("http://placehold.it/50x50");
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+
+        /* Campos adicionais do usuários */
+        validUser.setCpf("111");
+        validUser.setFunctionalNumber(222);
+        validUser.setRg(333);
+
         assertThat(userRepository.findOneByLogin("joe").isPresent()).isFalse();
 
         restMvc.perform(
@@ -195,6 +201,11 @@ public class AccountResourceIntTest {
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
+        /* Campos adicionais do usuários */
+        invalidUser.setCpf("111");
+        invalidUser.setFunctionalNumber(222);
+        invalidUser.setRg(333);
+
         restUserMockMvc.perform(
             post("/api/register")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -218,6 +229,11 @@ public class AccountResourceIntTest {
         invalidUser.setImageUrl("http://placehold.it/50x50");
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+
+        /* Campos adicionais do usuários */
+        invalidUser.setCpf("111");
+        invalidUser.setFunctionalNumber(222);
+        invalidUser.setRg(333);
 
         restUserMockMvc.perform(
             post("/api/register")
@@ -243,6 +259,11 @@ public class AccountResourceIntTest {
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
+        /* Campos adicionais do usuários */
+        invalidUser.setCpf("111");
+        invalidUser.setFunctionalNumber(222);
+        invalidUser.setRg(333);
+
         restUserMockMvc.perform(
             post("/api/register")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -266,6 +287,11 @@ public class AccountResourceIntTest {
         invalidUser.setImageUrl("http://placehold.it/50x50");
         invalidUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         invalidUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+
+        /* Campos adicionais do usuários */
+        invalidUser.setCpf("111");
+        invalidUser.setFunctionalNumber(222);
+        invalidUser.setRg(333);
 
         restUserMockMvc.perform(
             post("/api/register")
@@ -292,6 +318,11 @@ public class AccountResourceIntTest {
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
+        /* Campos adicionais do usuários */
+        validUser.setCpf("111");
+        validUser.setFunctionalNumber(222);
+        validUser.setRg(333);
+
         // Duplicate login, different email
         ManagedUserVM duplicatedUser = new ManagedUserVM();
         duplicatedUser.setLogin(validUser.getLogin());
@@ -307,6 +338,11 @@ public class AccountResourceIntTest {
         duplicatedUser.setLastModifiedBy(validUser.getLastModifiedBy());
         duplicatedUser.setLastModifiedDate(validUser.getLastModifiedDate());
         duplicatedUser.setAuthorities(new HashSet<>(validUser.getAuthorities()));
+
+        /* Campos adicionais do usuários */
+        duplicatedUser.setCpf("111");
+        duplicatedUser.setFunctionalNumber(222);
+        duplicatedUser.setRg(333);
 
         // Good user
         restMvc.perform(
@@ -341,6 +377,11 @@ public class AccountResourceIntTest {
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
+        /* Campos adicionais do usuários */
+        validUser.setCpf("111");
+        validUser.setFunctionalNumber(222);
+        validUser.setRg(333);
+
         // Duplicate email, different login
         ManagedUserVM duplicatedUser = new ManagedUserVM();
         duplicatedUser.setLogin("johnjr");
@@ -356,6 +397,11 @@ public class AccountResourceIntTest {
         duplicatedUser.setLastModifiedBy(validUser.getLastModifiedBy());
         duplicatedUser.setLastModifiedDate(validUser.getLastModifiedDate());
         duplicatedUser.setAuthorities(new HashSet<>(validUser.getAuthorities()));
+
+        /* Campos adicionais do usuários */
+        duplicatedUser.setCpf("111");
+        duplicatedUser.setFunctionalNumber(222);
+        duplicatedUser.setRg(333);
 
         // Good user
         restMvc.perform(
@@ -388,6 +434,11 @@ public class AccountResourceIntTest {
         userWithUpperCaseEmail.setLastModifiedDate(validUser.getLastModifiedDate());
         userWithUpperCaseEmail.setAuthorities(new HashSet<>(validUser.getAuthorities()));
 
+        /* Campos adicionais do usuários */
+        userWithUpperCaseEmail.setCpf("111");
+        userWithUpperCaseEmail.setFunctionalNumber(222);
+        userWithUpperCaseEmail.setRg(333);
+
         restMvc.perform(
             post("/api/register")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -411,6 +462,11 @@ public class AccountResourceIntTest {
         validUser.setImageUrl("http://placehold.it/50x50");
         validUser.setLangKey(Constants.DEFAULT_LANGUAGE);
         validUser.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+
+        /* Campos adicionais do usuários */
+        validUser.setCpf("111");
+        validUser.setFunctionalNumber(222);
+        validUser.setRg(333);
 
         restMvc.perform(
             post("/api/register")

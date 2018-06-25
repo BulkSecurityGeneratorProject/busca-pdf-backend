@@ -32,9 +32,9 @@ spring:
         serialization.indent_output: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://localhost:5432/buscapdf
-        username: teste
-        password: teste
+        url: jdbc:postgresql://192.168.0.98:5432/dev_buscapdf
+        username: develop
+        password: develop
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL
