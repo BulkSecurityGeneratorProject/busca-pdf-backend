@@ -64,6 +64,7 @@ public class AccountResource {
 
         User user = userService.registerUser(managedUserVM, managedUserVM.getPassword(),
             managedUserVM.getCpf(), managedUserVM.getRg(), managedUserVM.getFunctionalNumber());
+
         mailService.sendActivationEmail(user);
     }
 

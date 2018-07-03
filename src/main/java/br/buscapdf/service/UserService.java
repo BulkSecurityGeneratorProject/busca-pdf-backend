@@ -99,6 +99,17 @@ public class UserService {
             });
     }
 
+    public UserExtra createUserExtra(User user, String cpf, Integer rg, Integer functionalNumber) {
+        UserExtra newUserExtra = new UserExtra();
+        newUserExtra.setUser(user);
+        newUserExtra.setCpf(cpf);
+        newUserExtra.setRg(rg);
+        newUserExtra.setFunctionalNumber(functionalNumber);
+        userExtraRepository.save(newUserExtra);
+        log.debug("Created Information for UserExtra: {}", newUserExtra);
+        return newUserExtra;
+    }
+
     public User registerUser(UserDTO userDTO, String password) {
 
         User newUser = new User();
@@ -128,20 +139,11 @@ public class UserService {
 
     public User registerUser(ManagedUserVM managedUserVM, String password, String cpf, Integer rg, Integer functionalNumber) {
         User newUser = this.registerUser(managedUserVM, password);
-
-        UserExtra newUserExtra = new UserExtra();
-        newUserExtra.setUser(newUser);
-        newUserExtra.setCpf(cpf);
-        newUserExtra.setRg(rg);
-        newUserExtra.setFunctionalNumber(functionalNumber);
-        userExtraRepository.save(newUserExtra);
-
-        log.debug("Created Information for UserExtra: {}", newUserExtra);
-
+        createUserExtra(newUser, cpf, rg, functionalNumber);
         return newUser;
     }
 
-    public User createUser(UserDTO userDTO) {
+    public User createUser(UserDTO userDTO, String cpf, Integer rg, Integer functionalNumber) {
         User user = new User();
         user.setLogin(userDTO.getLogin());
         user.setFirstName(userDTO.getFirstName());
@@ -168,6 +170,9 @@ public class UserService {
         cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(user.getLogin());
         cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(user.getEmail());
         log.debug("Created Information for User: {}", user);
+
+        createUserExtra(user, cpf, rg, functionalNumber);
+
         return user;
     }
 
@@ -227,6 +232,7 @@ public class UserService {
 
     public void deleteUser(String login) {
         userRepository.findOneByLogin(login).ifPresent(user -> {
+            userExtraRepository.delete(user.getId());
             userRepository.delete(user);
             cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(user.getLogin());
             cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(user.getEmail());
@@ -276,6 +282,7 @@ public class UserService {
         List<User> users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS));
         for (User user : users) {
             log.debug("Deleting not activated user {}", user.getLogin());
+            userExtraRepository.delete(user.getId());
             userRepository.delete(user);
             cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(user.getLogin());
             cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(user.getEmail());

@@ -1,9 +1,10 @@
 package br.buscapdf.web.rest;
 
 import br.buscapdf.BuscapdfApp;
-import br.buscapdf.config.CacheConfiguration;
 import br.buscapdf.domain.Authority;
 import br.buscapdf.domain.User;
+import br.buscapdf.domain.UserExtra;
+import br.buscapdf.repository.UserExtraRepository;
 import br.buscapdf.repository.UserRepository;
 import br.buscapdf.security.AuthoritiesConstants;
 import br.buscapdf.service.MailService;
@@ -46,7 +47,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BuscapdfApp.class)
 public class UserResourceIntTest {
-
     private static final String DEFAULT_LOGIN = "johndoe";
     private static final String UPDATED_LOGIN = "jhipster";
 
@@ -70,8 +70,15 @@ public class UserResourceIntTest {
     private static final String DEFAULT_LANGKEY = "en";
     private static final String UPDATED_LANGKEY = "fr";
 
+    private static final String DEFAULT_CPF = "11122233300";
+    private static final Integer DEFAULT_FUNCTIONAL_NUMBER = 123999;
+    private static final Integer DEFAULT_RG = 123888;
+
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserExtraRepository userExtraRepository;
 
     @Autowired
     private MailService mailService;
@@ -100,6 +107,7 @@ public class UserResourceIntTest {
     private MockMvc restUserMockMvc;
 
     private User user;
+    private UserExtra userExtra;
 
     @Before
     public void setup() {
@@ -130,7 +138,23 @@ public class UserResourceIntTest {
         user.setLastName(DEFAULT_LASTNAME);
         user.setImageUrl(DEFAULT_IMAGEURL);
         user.setLangKey(DEFAULT_LANGKEY);
+
+        UserExtra userExtra = new UserExtra();
+        userExtra.setUser(user);
+        userExtra.setCpf(DEFAULT_CPF);
+        userExtra.setFunctionalNumber(DEFAULT_FUNCTIONAL_NUMBER);
+        userExtra.setRg(DEFAULT_RG);
+
         return user;
+    }
+
+    public static UserExtra createUserExtra(EntityManager em, User user) {
+        UserExtra userExtra = new UserExtra();
+        userExtra.setUser(user);
+        userExtra.setCpf(DEFAULT_CPF);
+        userExtra.setFunctionalNumber(DEFAULT_FUNCTIONAL_NUMBER);
+        userExtra.setRg(DEFAULT_RG);
+        return userExtra;
     }
 
     @Before
@@ -138,6 +162,8 @@ public class UserResourceIntTest {
         user = createEntity(em);
         user.setLogin(DEFAULT_LOGIN);
         user.setEmail(DEFAULT_EMAIL);
+
+        userExtra = createUserExtra(em, user);
     }
 
     @Test
@@ -157,6 +183,11 @@ public class UserResourceIntTest {
         managedUserVM.setLangKey(DEFAULT_LANGKEY);
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
+        /* Campos adicionais do usuários */
+        managedUserVM.setCpf(DEFAULT_CPF);
+        managedUserVM.setFunctionalNumber(DEFAULT_FUNCTIONAL_NUMBER);
+        managedUserVM.setRg(DEFAULT_RG);
+
         restUserMockMvc.perform(post("/api/users")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(managedUserVM)))
@@ -166,12 +197,19 @@ public class UserResourceIntTest {
         List<User> userList = userRepository.findAll();
         assertThat(userList).hasSize(databaseSizeBeforeCreate + 1);
         User testUser = userList.get(userList.size() - 1);
+
         assertThat(testUser.getLogin()).isEqualTo(DEFAULT_LOGIN);
         assertThat(testUser.getFirstName()).isEqualTo(DEFAULT_FIRSTNAME);
         assertThat(testUser.getLastName()).isEqualTo(DEFAULT_LASTNAME);
         assertThat(testUser.getEmail()).isEqualTo(DEFAULT_EMAIL);
         assertThat(testUser.getImageUrl()).isEqualTo(DEFAULT_IMAGEURL);
         assertThat(testUser.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
+
+        UserExtra userExtraTest = userExtraRepository.findOne(testUser.getId());
+        assertThat(userExtraTest).isNotNull();
+        assertThat(userExtraTest.getCpf()).isEqualTo(DEFAULT_CPF);
+        assertThat(userExtraTest.getFunctionalNumber()).isEqualTo(DEFAULT_FUNCTIONAL_NUMBER);
+        assertThat(userExtraTest.getRg()).isEqualTo(DEFAULT_RG);
     }
 
     @Test
@@ -190,6 +228,11 @@ public class UserResourceIntTest {
         managedUserVM.setImageUrl(DEFAULT_IMAGEURL);
         managedUserVM.setLangKey(DEFAULT_LANGKEY);
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+
+        /* Campos adicionais do usuários */
+        managedUserVM.setCpf(DEFAULT_CPF);
+        managedUserVM.setFunctionalNumber(222);
+        managedUserVM.setRg(DEFAULT_RG);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restUserMockMvc.perform(post("/api/users")
@@ -220,6 +263,11 @@ public class UserResourceIntTest {
         managedUserVM.setLangKey(DEFAULT_LANGKEY);
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
+        /* Campos adicionais do usuários */
+        managedUserVM.setCpf(DEFAULT_CPF);
+        managedUserVM.setFunctionalNumber(DEFAULT_FUNCTIONAL_NUMBER);
+        managedUserVM.setRg(DEFAULT_RG);
+
         // Create the User
         restUserMockMvc.perform(post("/api/users")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -248,6 +296,11 @@ public class UserResourceIntTest {
         managedUserVM.setImageUrl(DEFAULT_IMAGEURL);
         managedUserVM.setLangKey(DEFAULT_LANGKEY);
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
+
+        /* Campos adicionais do usuários */
+        managedUserVM.setCpf(DEFAULT_CPF);
+        managedUserVM.setFunctionalNumber(DEFAULT_FUNCTIONAL_NUMBER);
+        managedUserVM.setRg(DEFAULT_RG);
 
         // Create the User
         restUserMockMvc.perform(post("/api/users")
@@ -482,7 +535,10 @@ public class UserResourceIntTest {
     public void deleteUser() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
-        int databaseSizeBeforeDelete = userRepository.findAll().size();
+        userExtraRepository.saveAndFlush(userExtra);
+
+        int userLengthBeforeDelete = userRepository.findAll().size();
+        int userExtraLengthBeforeDelete = userExtraRepository.findAll().size();
 
         // Delete the user
         restUserMockMvc.perform(delete("/api/users/{login}", user.getLogin())
@@ -491,9 +547,13 @@ public class UserResourceIntTest {
 
         assertThat(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin())).isNull();
 
-        // Validate the database is empty
+        // Validate the database is empty (User)
         List<User> userList = userRepository.findAll();
-        assertThat(userList).hasSize(databaseSizeBeforeDelete - 1);
+        assertThat(userList).hasSize(userLengthBeforeDelete - 1);
+
+        // Validate the database is empty (UserExtra)
+        List<UserExtra> userExtraList = userExtraRepository.findAll();
+        assertThat(userExtraList ).hasSize(userExtraLengthBeforeDelete - 1);
     }
 
     @Test
@@ -505,7 +565,11 @@ public class UserResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$").isArray())
-            .andExpect(jsonPath("$").value(containsInAnyOrder(AuthoritiesConstants.USER, AuthoritiesConstants.ADMIN)));
+            .andExpect(jsonPath("$").value(
+                containsInAnyOrder(
+                    AuthoritiesConstants.USER,
+                    AuthoritiesConstants.ADMIN,
+                    AuthoritiesConstants.OPERATOR)));
     }
 
     @Test
