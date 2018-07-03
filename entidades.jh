@@ -8,3 +8,14 @@ relationship OneToOne {
 	// User é uma Entidade criada pelo Framework
     UserExtra{user} to User
 }
+
+entity TipoDocumento {
+    nome String required maxlength(255),
+	descricao String required maxlength(255),
+    // 4096 é tamanho máximo de path no Unix
+    diretorio String required maxlength(4096),
+    // Indica se os arquivos possuem divisão por ano (diretórios 2015, 2016...)
+    divisaoAnual Boolean required,
+    // indica quais tipos de documentos serão pesquisados por nomes de usuário no ato da publicação
+    pesquisaAutomatica Boolean required
+}
