@@ -8,9 +8,3 @@ relationship OneToOne {
 	// User é uma Entidade criada pelo Framework
     UserExtra{user} to User
 }
-
-entity Colecao {
-    nome String required maxlength(100),
-	descricao String required maxlength(255),
-    ativa Boolean required
-}
