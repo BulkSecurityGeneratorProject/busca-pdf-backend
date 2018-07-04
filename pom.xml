@@ -6,7 +6,8 @@
     <artifactId>buscapdf</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>Buscapdf</name>
+
+    <name>buscapdf-backend</name>
 
     <properties>
         <!-- Build properties -->
