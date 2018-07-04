@@ -35,6 +35,7 @@
       "pt-br"
     ],
     "clientPackageManager": "yarn",
-    "skipClient": true
+    "skipClient": true,
+    "herokuDeployType": "jar"
   }
 }

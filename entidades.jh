@@ -9,6 +9,12 @@ relationship OneToOne {
     UserExtra{user} to User
 }
 
+entity Colecao {
+    nome String required maxlength(100),
+	descricao String required maxlength(255),
+    ativa Boolean required
+}
+
 entity TipoDocumento {
     nome String required maxlength(255),
 	descricao String required maxlength(255),

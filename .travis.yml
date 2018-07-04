@@ -1,52 +1,44 @@
 os:
-  - linux
-
+- linux
 services:
-  - docker
-
+- docker
 language:
-  - node_js
-
+- node_js
 branches:
   only:
   - master
   - develop
-
 node_js:
-  - "8.9.4"
-
+- 8.9.4
 jdk:
-  - oraclejdk8
-
+- oraclejdk8
 sudo: false
-
 cache:
   directories:
-    - node
-    - node_modules
-    - $HOME/.m2
-    - $HOME/.yarn-cache
-
+  - node
+  - node_modules
+  - "$HOME/.m2"
+  - "$HOME/.yarn-cache"
 env:
   global:
-    - NODE_VERSION=8.9.4
-    - SPRING_OUTPUT_ANSI_ENABLED=ALWAYS
-    - SPRING_JPA_SHOW_SQL=false
-
+  - NODE_VERSION=8.9.4
+  - SPRING_OUTPUT_ANSI_ENABLED=ALWAYS
+  - SPRING_JPA_SHOW_SQL=false
 before_install:
-  - jdk_switcher use oraclejdk8
-  - java -version
-  - sudo /etc/init.d/mysql stop
-  - sudo /etc/init.d/postgresql stop
+- jdk_switcher use oraclejdk8
+- java -version
+- sudo /etc/init.d/mysql stop
+- sudo /etc/init.d/postgresql stop
 
 install:
 
 script:
-  - chmod +x mvnw
-  - ./mvnw clean test
-  # Sonar
-  - mvn sonar:sonar -Dsonar.organization=viniciuslj-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$sonarLogin
+- chmod +x mvnw
+- "./mvnw clean test"
+- mvn sonar:sonar -Dsonar.organization=viniciuslj-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$sonarLogin
 
 notifications:
-  slack: busca-pdf:$slackToken
   email: false
+  slack:
+    rooms:
+      secure: BfYrcr9eJAdrETYICOPXcj0aQG4wPV+wFEMpFGgOpl5dlim3Pk/Io4iuuXAYrVcRAppBdCiW/Xwobw2caagxtHKeyNrrJkjHRvLIneMnl3aIMuGy5Ig6eAb7Vtg9h1WmZ6K7tMfwcbqWUZIp+NqcfUiUvXI0vubVKEvxpwWN2is//McYrt1Z/HnoGkyNBCeZIwAmbOn+SW+1wZD3I7Pg7qMZcA/iH8UwB+krp36L1G0edea9t+nt9tw9HnVhrwSgWrcYa2uxOr4Id9z4R8HWLNoatia18QgOSnjrDUosA3cHKf5JvgkPjPd77Sox9DYFAzSxOdEIxO24XYDz7XpRg2HDkp+DK8kTROUCLuqKE0LcBW0ohUXSSXj3A9d5+sODjykqWVUe6MnTj86Qwe4glSelFYrhzuzwjimxBDGUiIXxKfLTP04u/ON9QkmrCuDEAqbyorrjw7ytP9KMNgT3gn5ReysFY7q0EDCqdty/8eMWv29vtSQuTr+C/VU2XX7s43LzDE3REs9rvH7u4b+nwPN99R4Fns6K1DnK5e1cOUaEDtLZ4F+pUBYq/zFdqgPxexukuvgv785VEzoRvFx19a6mXHZIDS2yqeoDinYMFzeB9ql7BY+lpI32IAomUABxlseqhcPUkNX82DCfNspr/TeZdDiVV9Zt2ZGbe+J76Eg=
