@@ -8,3 +8,14 @@ relationship OneToOne {
 	// User é uma Entidade criada pelo Framework
     UserExtra{user} to User
 }
+
+entity Banco {
+    nome String required maxlength(100),
+	descricao String required maxlength(255),
+    // https://github.com/elastic/elasticsearch/pull/8158/files
+    // Set maximum index name length to 255 bytes
+    indice String required maxlength(255),
+    notificacao Boolean required,
+    ativo Boolean required
+}
+paginate Banco with pagination
