@@ -19,3 +19,15 @@ entity Banco {
     ativo Boolean required
 }
 paginate Banco with pagination
+
+entity Diretorio {
+    nome String required maxlength(100),
+	descricao String required maxlength(255),
+    // 4096 é tamanho máximo de path no Unix
+	path String required maxlength(4096)
+}
+paginate Diretorio with pagination
+
+relationship ManyToOne {
+    Diretorio{banco(nome)} to Banco
+}
