@@ -41,6 +41,7 @@ public class CacheConfiguration {
             cm.createCache(br.buscapdf.domain.UserExtra.class.getName(), jcacheConfiguration);
             cm.createCache(br.buscapdf.domain.Banco.class.getName(), jcacheConfiguration);
             cm.createCache(br.buscapdf.domain.Diretorio.class.getName(), jcacheConfiguration);
+            cm.createCache(br.buscapdf.domain.Documento.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

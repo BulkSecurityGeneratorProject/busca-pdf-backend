@@ -28,6 +28,16 @@ entity Diretorio {
 }
 paginate Diretorio with pagination
 
+entity Documento {
+    nome String maxlength(100),
+	descricao String maxlength(255),
+	complementoDiretorio String maxlength(4096),
+    // Tamanho máximo de nome de arquivo no Linux (ext4)
+    nomeArquivo String required maxlength(255)
+}
+paginate Documento with infinite-scroll
+
 relationship ManyToOne {
-    Diretorio{banco(nome)} to Banco
+    Diretorio{banco(nome)} to Banco,
+    Documento{diretorio(nome)} to Diretorio
 }
